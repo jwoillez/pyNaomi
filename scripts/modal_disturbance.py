@@ -24,7 +24,7 @@ def msgSend(env, process, command, param):
 
 
 if __name__ == '__main__':
-     parser = argparse.ArgumentParser(description='Inject a modal disturbance')
+     parser = argparse.ArgumentParser(description='Inject a modal disturbance on the DM')
      parser.add_argument('frequency', type=float, help='Frequency [Hz]')
      parser.add_argument('amplitude', type=float, help='Amplitude [umRMS]')
      parser.add_argument('mode', type=int, help='Mode index Z=2..16')
