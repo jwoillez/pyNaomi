@@ -37,8 +37,8 @@ if __name__ == '__main__':
      filename = disturbance(args.frequency, args.amplitude, args.mode)
 
      # Configure SPARTA
-     ccs.SendCommand('wat1nao', 'spaccsServer', 'SETUP', 'ModalCtrDisturb.FILENAME {0}'.format(filename))
-     ccs.SendCommand('wat1nao', 'spaccsServer', 'SETUP', 'ModalCtrDisturb.CYCLES 30')
-     ccs.SendCommand('wat1nao', 'spaccsServer', 'EXEC', 'ModalCtrDisturb.run')
+     ccs.SendCommand('wat{0}nao'.format(os.environ['TCSID']), 'spaccsServer', 'SETUP', 'ModalCtrDisturb.FILENAME {0}'.format(filename))
+     ccs.SendCommand('wat{0}nao'.format(os.environ['TCSID']), 'spaccsServer', 'SETUP', 'ModalCtrDisturb.CYCLES 30')
+     ccs.SendCommand('wat{0}nao'.format(os.environ['TCSID']), 'spaccsServer', 'EXEC', 'ModalCtrDisturb.run')
 
 
