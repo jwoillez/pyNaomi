@@ -2,6 +2,7 @@ from astropy.io import fits
 from matplotlib import pyplot as plt
 from scipy import linalg as la
 import numpy as np
+import os
 
 
 #%% Simulation parameters
@@ -14,7 +15,7 @@ amplitude = 0.15  # [um]
 
 #%% Load interaction matrix (S2M matrix)
 
-with fits.open("./data/RTC.S2M.fits") as hdulist:
+with fits.open("../data/RTC.S2M.fits") as hdulist:
     S2M = hdulist[0].data
 
 #%% Create fundamental modulation
@@ -22,33 +23,31 @@ with fits.open("./data/RTC.S2M.fits") as hdulist:
 modulation = amplitude*np.sin(2.0*np.pi*np.arange(period)/(period/2)) + \
              amplitude*np.sin(2.0*np.pi*np.arange(period)/f*f_fast)
 
-#%% Display modulation
-
-fig, axarr = plt.subplots(1, 1, figsize=(14, 4))
-axarr.plot(modulation)
-plt.show()
-
 #%% Populate Zernikes
 
 Z = np.zeros(((period+margin)*12, 14))
 for iZ in range(2, 14):
     Z[(iZ-2)*(period+margin):(iZ-2)*(period+margin)+period, iZ] = modulation
 
-#%%
-
-fig, axarr = plt.subplots(1, 1)
-axarr.imshow(Z, aspect='auto')
-plt.show()
-
 #%% Convert to slopes
 
 S = (la.pinv(S2M) @ Z.T).T
 
-print(S.max())
-
 #%%
 
 hdulist = fits.HDUList([fits.PrimaryHDU(S.astype(np.float32))])
-hdulist.writeto('./data/NcpaModulation.fits', overwrite=True)
+if 'INS_ROOT' in os.environ:
+    hdulist.writeto('{0}/SYSTEM/SPARTA/RTCDATA/NcpaModulation.fits'.format(os.environ['INS_ROOT']), overwrite=True)
+else:
+    hdulist.writeto('./data/NcpaModulation.fits', overwrite=True)
 
 #%%
+
+print("Duration = {0} s".format(S.shape[0]/f))
+
+#%% Display modulation
+
+fig, axarr = plt.subplots(1, 1, figsize=(14, 4))
+axarr.plot(modulation)
+plt.show()
+
