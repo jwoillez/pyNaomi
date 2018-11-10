@@ -7,4 +7,5 @@ setup(name = 'pyNaomi',
       description = 'Python tools for NAOMI',
 #      package_dir = {'':'lib'},
 #      packages = find_packages('lib'),
-      scripts = ['scripts/modal_disturbance.py'])
+      scripts = ['scripts/modal_disturbance.py',
+		 'scripts/fitsview.py'])
